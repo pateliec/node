@@ -59,7 +59,7 @@ app.get("/todo", function(req, res){
 app.get("/todo/:id", function(req, res){
     var todoId = req.params.id;
    
-    var result = _.findwhere(todos,todoId)
+    var result = _.findwhere(todos,todoId);
     
       if(result)
           {
