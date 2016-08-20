@@ -40,9 +40,9 @@ app.post("/todo", function(req, res){
     
     var body = req.body;
     
-    var data = _.pick(body, {"id", "description", "completed"})
+    var data = _.pick(body, "id", "description", "completed")
     
-    if(_.isNumber(data.id) || _.isBoolean(data.completed) || _.isString(data.description) || data.description.trim().length() === 0)
+    if(!_.isNumber(data.id) || !_.isBoolean(data.completed) || !_.isString(data.description) || data.description.trim().length === 0)
         {
             res.status(400).send();
             return;
@@ -58,8 +58,7 @@ app.get("/todo", function(req, res){
 
 app.get("/todo/:id", function(req, res){
     var todoId = req.params.id;
-   
-    var result = _.findwhere(todos,todoId);
+    var result = _.findWhere(todos,{id:parseInt(todoId)});
     
       if(result)
           {
