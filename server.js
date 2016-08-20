@@ -70,6 +70,21 @@ app.get("/todo/:id", function(req, res){
     
 })
 
+app.delete("/todo/:id", function(req, res){
+    var todoId = req.params.id;
+    var elm = _.findWhere(todos,{id:parseInt(todoId)});
+    
+      if(elm)
+          {
+              todos = _.without(todos,elm);
+              res.json(todos);
+          }
+      else{
+          res.status(404).send();
+      }
+    
+})
+
 app.listen(PORT, function(){
     console.log("Server has started at port:"+PORT);
 })
