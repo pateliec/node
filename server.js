@@ -36,14 +36,25 @@ app.get("/todo", function(req, res){
 
 app.get("/todo/:id", function(req, res){
     var todoId = req.params.id;
+    var result;
+    var flag = false;
     for(var i=0 ; i< todos.length; i++)
         {
             if(todos[i].id == todoId)
                 {
-                   res.json(todos[i]); 
-                    break;
+                   result = todos[i];
+                    flag = true;
                 }
+            
         }
+    
+      if(flag)
+          {
+              res.json(result);
+          }
+      else{
+          res.send("No record found");
+      }
     
 })
 
