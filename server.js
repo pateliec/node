@@ -1,6 +1,10 @@
 var express = require("express");
 
+var bodyParser = require("body-parser");
+
 var app = express();
+
+app.use(bodyParser.json())
 
 var PORT = process.env.PORT || 3000;
 
@@ -28,6 +32,12 @@ var todos = [{
 
 app.get("/", function(req, res){
     res.send("Todo Api Root");
+})
+
+app.post("/todo", function(req, res){
+    var data = req.body;
+    todos.push(data);
+    res.json(todos);
 })
 
 app.get("/todo", function(req, res){
