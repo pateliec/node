@@ -2,6 +2,8 @@ var express = require("express");
 
 var bodyParser = require("body-parser");
 
+var _ = require("underscore");
+
 var app = express();
 
 app.use(bodyParser.json())
@@ -35,7 +37,17 @@ app.get("/", function(req, res){
 })
 
 app.post("/todo", function(req, res){
-    var data = req.body;
+    
+    var body = req.body;
+    
+    var data = _.pick(body, {"id", "description", "completed"})
+    
+    if(_.isNumber(data.id) || _.isBoolean(data.completed) || _.isString(data.description) || data.description.trim().length() === 0)
+        {
+            res.status(400).send();
+            return;
+        }
+    
     todos.push(data);
     res.json(todos);
 })
@@ -46,19 +58,10 @@ app.get("/todo", function(req, res){
 
 app.get("/todo/:id", function(req, res){
     var todoId = req.params.id;
-    var result;
-    var flag = false;
-    for(var i=0 ; i< todos.length; i++)
-        {
-            if(todos[i].id == todoId)
-                {
-                   result = todos[i];
-                    flag = true;
-                }
-            
-        }
+   
+    var result = _.findwhere(todos,todoId)
     
-      if(flag)
+      if(result)
           {
               res.json(result);
           }
