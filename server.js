@@ -53,7 +53,7 @@ app.get("/todo/:id", function(req, res){
               res.json(result);
           }
       else{
-          res.send("No record found");
+          res.status(404).send();
       }
     
 })
