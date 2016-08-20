@@ -27,11 +27,11 @@ var todos = [{
 ]
 
 app.get("/", function(req, res){
-    res.json("Todo Api Root");
+    res.send("Todo Api Root");
 })
 
 app.get("/todo", function(req, res){
-    res.send(todos);
+    res.json(todos);
 })
 
 app.listen(PORT, function(){
