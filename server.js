@@ -18,7 +18,7 @@ var todos = [{
              {
     id:2,
     description: "Go to Market",
-    completed:false
+    completed:true
 },
              {
     id:3,
@@ -104,7 +104,29 @@ app.put("/todo/:id", function(req, res){
 })
 
 app.get("/todo", function(req, res){
-    res.json(todos);
+    
+    var filterTodo = todos;
+    
+    var queryParam = req.query;
+   
+    if(queryParam.hasOwnProperty("completed") && queryParam.completed === "true")
+        {
+            filterTodo = _.where(filterTodo, {"completed":true});
+        }
+    else if(queryParam.hasOwnProperty("completed") && queryParam.completed === "false")
+        {
+             
+            filterTodo = _.where(filterTodo, {"completed":false});
+        
+        }
+
+    if(queryParam.hasOwnProperty("q") && queryParam.q.length >0)
+        {
+            filterTodo = _.filter(filterTodo, function(todo){
+                return todo.description.toLowerCase().indexOf(queryParam.q.toLowerCase()) >=0;
+            })
+        }
+    res.json(filterTodo);
 })
 
 app.get("/todo/:id", function(req, res){
