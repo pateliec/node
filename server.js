@@ -40,7 +40,8 @@ app.post("/todo", function(req, res){
     
     var body = req.body;
     
-    var data = _.pick(body, "id", "description", "completed")
+    var data = _.pick(body, "id", "description", "completed");
+    
     
     if(!_.isNumber(data.id) || !_.isBoolean(data.completed) || !_.isString(data.description) || data.description.trim().length === 0)
         {
@@ -49,6 +50,56 @@ app.post("/todo", function(req, res){
         }
     
     todos.push(data);
+    res.json(todos);
+})
+
+app.put("/todo/:id", function(req, res){
+    
+    var body = req.body;
+    
+    var data = _.pick(body, "id", "description", "completed");
+    
+    var record = _.findWhere(todos, {id: parseInt(req.params.id)});
+    
+    if(!record)
+        {
+            res.status(404).send();
+        }
+    
+    var todoMatched = {};
+    
+    if(data.hasOwnProperty('description') && _.isString(data.description) && data.description.trim().length !== 0)
+        {
+            todoMatched.description = data.description;
+        }
+    else if(data.hasOwnProperty('description'))
+        {
+            res.status(400).send();
+            return;
+        }
+    
+    if(data.hasOwnProperty('id') && _.isNumber(data.id))
+        {
+            todoMatched.id = data.id;
+        }
+    else if(data.hasOwnProperty('id'))
+        {
+            res.status(400).send();
+            return;
+        }
+    
+    if(data.hasOwnProperty('completed') && _.isBoolean(data.completed))
+        {
+            todoMatched.completed = data.completed;
+        }
+    else if(data.hasOwnProperty('completed'))
+        {
+            res.status(400).send();
+            return;
+        }
+    
+    _.extend(record,todoMatched)
+    
     res.json(todos);
 })
 
