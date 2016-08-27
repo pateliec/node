@@ -2,6 +2,8 @@ var express = require("express");
 
 var bodyParser = require("body-parser");
 
+var db = require("./db.js"); 
+
 var _ = require("underscore");
 
 var app = express();
@@ -43,14 +45,21 @@ app.post("/todo", function(req, res){
     var data = _.pick(body, "id", "description", "completed");
     
     
-    if(!_.isNumber(data.id) || !_.isBoolean(data.completed) || !_.isString(data.description) || data.description.trim().length === 0)
+    if(!_.isBoolean(data.completed) || !_.isString(data.description) || data.description.trim().length === 0)
         {
             res.status(400).send();
             return;
         }
     
-    todos.push(data);
-    res.json(todos);
+    //todos.push(data);
+    db.todo.create(data).then(function(data1)
+    {
+      //res.status(200).json(data1);
+      res.json(data1);
+    }).catch(function(e){
+        res.status(400).json(e);
+    });
+       
 })
 
 app.put("/todo/:id", function(req, res){
@@ -158,6 +167,9 @@ app.delete("/todo/:id", function(req, res){
     
 })
 
-app.listen(PORT, function(){
-    console.log("Server has started at port:"+PORT);
-})
+db.sequelize.sync().then(function(){
+        app.listen(PORT, function(){
+        console.log("Server has started at port:"+PORT);
+    });
+});
+
